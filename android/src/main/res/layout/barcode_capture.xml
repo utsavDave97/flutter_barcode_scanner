@@ -30,13 +30,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
+            
             <Button
-                android:id="@+id/btnExample"
+                android:id="@+id/btnBarcodeCaptureCancel"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_alignParentTop="false"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
+                android:layout_height="wrap_content"
+                android:background="#034FA3"
                 android:text="Cancel"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white" 
@@ -52,14 +53,15 @@
                 android:contentDescription="Flash button"
                 android:src="@drawable/ic_barcode_flash_off" 
             />
+            
             <Button
-                android:id="@+id/btnBarcodeCaptureCancel"
+                android:id="@+id/btnExample"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="false"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:text="Cancel"
+                android:background="#034FA3"
+                android:text="Finished Scanning"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white" 
             />
