@@ -359,6 +359,9 @@ class BarcodeScannerViewController: UIViewController {
         self.view.addSubview(finishedScanningButton)
         self.view.addSubview(flashIcon)
         
+        self.cancelButton.titleLabel?.adjustsFontSizeToFitWidth = true   
+        self.finishedScanningButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        
         bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:0).isActive = true
         bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant:0).isActive = true
         bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:0).isActive = true
