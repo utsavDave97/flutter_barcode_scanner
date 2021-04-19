@@ -360,10 +360,12 @@ class BarcodeScannerViewController: UIViewController {
         self.view.addSubview(flashIcon)
         
         self.cancelButton.titleLabel?.adjustsFontSizeToFitWidth = false
-        self.cancelButton.titleLabel?.lineBreakMode = .byTruncatingTail
+        self.cancelButton.titleLabel?.lineBreakMode = .byWordWrapping
+        self.cancelButton.titleLabel?.numberOfLines = 2
         
         self.finishedScanningButton.titleLabel?.adjustsFontSizeToFitWidth = false
-        self.finishedScanningButton.titleLabel?.lineBreakMode = .byTruncatingTail
+        self.finishedScanningButton.titleLabel?.lineBreakMode = .byWordWrapping
+        self.finishedScanningButton.titleLabel?.numberOfLines = 2
         
         bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:0).isActive = true
         bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant:0).isActive = true
