@@ -207,6 +207,17 @@ class BarcodeScannerViewController: UIViewController {
         let view = UIButton()
         view.setTitle(SwiftFlutterBarcodeScannerPlugin.cancelButtonText, for: .normal)
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(hexString: "#034FA3")
+        view.addTarget(self, action: #selector(BarcodeScannerViewController.cancelButtonClicked), for: .touchUpInside)
+        return view
+    }()
+    
+    /// Create and return cancel button
+    public lazy var finishedScanningButton: UIButton! = {
+        let view = UIButton()
+        view.setTitle("Finished Scanning", for: .normal)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(hexString: "#034FA3")
         view.addTarget(self, action: #selector(BarcodeScannerViewController.cancelButtonClicked), for: .touchUpInside)
         return view
     }()
@@ -334,6 +345,7 @@ class BarcodeScannerViewController: UIViewController {
             qrCodeFrameView.layoutSubviews()
             qrCodeFrameView.setNeedsUpdateConstraints()
             self.view.bringSubviewToFront(cancelButton)
+            self.view.bringSubviewToFront(finishedScanningButton)
         }
         setConstraintsForControls()
         self.drawLine()
@@ -344,6 +356,7 @@ class BarcodeScannerViewController: UIViewController {
     private func setConstraintsForControls() {
         self.view.addSubview(bottomView)
         self.view.addSubview(cancelButton)
+        self.view.addSubview(finishedScanningButton)
         self.view.addSubview(flashIcon)
         
         bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:0).isActive = true
@@ -354,13 +367,19 @@ class BarcodeScannerViewController: UIViewController {
         flashIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         flashIcon.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
         flashIcon.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
-        flashIcon.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
+        flashIcon.widthAnchor.constraint(equalToConstant: 50.0).isActive = true
         
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         cancelButton.widthAnchor.constraint(equalToConstant: 100.0).isActive = true
         cancelButton.heightAnchor.constraint(equalToConstant: 70.0).isActive = true
         cancelButton.bottomAnchor.constraint(equalTo:view.bottomAnchor,constant: 0).isActive=true
         cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:10).isActive = true
+        
+        finishedScanningButton.translatesAutoresizingMaskIntoConstraints = false
+        finishedScanningButton.widthAnchor.constraint(equalToConstant: 100.0).isActive = true
+        finishedScanningButton.heightAnchor.constraint(equalToConstant: 70.0).isActive = true
+        finishedScanningButton.bottomAnchor.constraint(equalTo:view.bottomAnchor,constant: 0).isActive=true
+        finishedScanningButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:10).isActive = true
     }
     
     /// Flash button click event listener
@@ -615,4 +634,24 @@ func hexStringToUIColor (hex:String) -> UIColor {
         blue: bValue,
         alpha: aValue
     )
+}
+
+extension UIColor {
+    convenience init(hexString: String) {
+        let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int = UInt64()
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (255, 0, 0, 0)
+        }
+        self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
+    }
 }
