@@ -218,7 +218,7 @@ class BarcodeScannerViewController: UIViewController {
         view.setTitle("Finished Scanning", for: .normal)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(hexString: "#034FA3")
-        view.addTarget(self, action: #selector(BarcodeScannerViewController.cancelButtonClicked), for: .touchUpInside)
+        view.addTarget(self, action: #selector(BarcodeScannerViewController.finishedScanningClicked), for: .touchUpInside)
         return view
     }()
     
@@ -431,6 +431,41 @@ class BarcodeScannerViewController: UIViewController {
     
     /// Cancel button click event listener
     @IBAction private func cancelButtonClicked() {
+        if SwiftFlutterBarcodeScannerPlugin.isContinuousScan{
+            showInputDialog(title: "Manual Entry",
+                subtitle: "Please enter the new number below.",
+                actionTitle: "OK",
+                cancelTitle: "Cancel",
+                inputPlaceholder: "Enter here",
+                inputKeyboardType: .default, actionHandler:
+                { (input:String?) in
+//                    print("The new number is \(input ?? "")")
+                 SwiftFlutterBarcodeScannerPlugin.onBarcodeScanReceiver(barcode: input ?? "")
+                })
+//             self.dismiss(animated: true, completion: {
+//                 SwiftFlutterBarcodeScannerPlugin.onBarcodeScanReceiver(barcode: "-2")
+//             })
+        }else{
+            if self.delegate != nil {
+                showInputDialog(title: "Manual Entry",
+                subtitle: "Please enter the new number below.",
+                actionTitle: "OK",
+                cancelTitle: "Cancel",
+                inputPlaceholder: "Enter here",
+                inputKeyboardType: .default, actionHandler:
+                { (input:String?) in
+//                    print("The new number is \(input ?? "")")
+               self.delegate?.userDidScanWith(barcode: input ?? "")
+                })
+//                 self.dismiss(animated: true, completion: {
+//                     self.delegate?.userDidScanWith(barcode: "-2")
+//                 })
+            }
+        }
+    }
+    
+    /// Cancel button click event listener
+    @IBAction private func finishedScanningClicked() {
         if SwiftFlutterBarcodeScannerPlugin.isContinuousScan{
             self.dismiss(animated: true, completion: {
                 SwiftFlutterBarcodeScannerPlugin.onBarcodeScanReceiver(barcode: "-1")
@@ -661,5 +696,33 @@ extension UIColor {
             (a, r, g, b) = (255, 0, 0, 0)
         }
         self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
+    }
+}
+
+extension UIViewController {
+    func showInputDialog(title:String? = nil,
+                         subtitle:String? = nil,
+                         actionTitle:String? = "Add",
+                         cancelTitle:String? = "Cancel",
+                         inputPlaceholder:String? = nil,
+                         inputKeyboardType:UIKeyboardType = UIKeyboardType.default,
+                         cancelHandler: ((UIAlertAction) -> Swift.Void)? = nil,
+                         actionHandler: ((_ text: String?) -> Void)? = nil) {
+        
+        let alert = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
+        alert.addTextField { (textField:UITextField) in
+            textField.placeholder = inputPlaceholder
+            textField.keyboardType = inputKeyboardType
+        }
+        alert.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { (action:UIAlertAction) in
+            guard let textField =  alert.textFields?.first else {
+                actionHandler?(nil)
+                return
+            }
+            actionHandler?(textField.text)
+        }))
+        alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel, handler: cancelHandler))
+        
+        self.present(alert, animated: true, completion: nil)
     }
 }
