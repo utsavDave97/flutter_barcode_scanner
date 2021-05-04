@@ -433,7 +433,7 @@ class BarcodeScannerViewController: UIViewController {
     @IBAction private func cancelButtonClicked() {
         if SwiftFlutterBarcodeScannerPlugin.isContinuousScan{
              self.dismiss(animated: true, completion: {
-             showInputDialog(title: "Manual Entry",
+             self.showInputDialog(title: "Manual Entry",
                  subtitle: "Please enter the barcode below.",
                  actionTitle: "OK",
                  cancelTitle: "Cancel",
@@ -446,7 +446,7 @@ class BarcodeScannerViewController: UIViewController {
         }else{
             if self.delegate != nil {
             self.dismiss(animated: true, completion: {
-            showInputDialog(title: "Manual Entry",
+            self.showInputDialog(title: "Manual Entry",
                 subtitle: "Please enter the new number below.",
                 actionTitle: "OK",
                 cancelTitle: "Cancel",
