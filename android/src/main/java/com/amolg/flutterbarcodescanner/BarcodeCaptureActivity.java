@@ -120,6 +120,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             Button btnFinishedScanning = findViewById(R.id.btnFinishedScanning);
             btnBarcodeCaptureCancel.setText(buttonText);
             btnBarcodeCaptureCancel.setOnClickListener(this);
+            btnFinishedScanning.setOnClickListener(this);
             imgViewBarcodeCaptureUseFlash.setOnClickListener(this);
             imgViewBarcodeCaptureUseFlash.setVisibility(FlutterBarcodeScannerPlugin.isShowFlashIcon ? View.VISIBLE : View.GONE);
             mPreview = findViewById(R.id.preview);
