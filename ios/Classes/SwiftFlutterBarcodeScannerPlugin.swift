@@ -432,30 +432,14 @@ class BarcodeScannerViewController: UIViewController {
     /// Cancel button click event listener
     @IBAction private func cancelButtonClicked() {
         if SwiftFlutterBarcodeScannerPlugin.isContinuousScan{
-             self.dismiss(animated: true, completion: {
-             self.showInputDialog(title: "Manual Entry",
-                 subtitle: "Please enter the barcode below.",
-                 actionTitle: "OK",
-                 cancelTitle: "Cancel",
-                 inputPlaceholder: "Enter here",
-                 inputKeyboardType: .default, actionHandler:
-                 { (input:String?) in
-                  SwiftFlutterBarcodeScannerPlugin.onBarcodeScanReceiver(barcode: input ?? "")
-                 })
-             })
+            self.dismiss(animated: true, completion: {
+                SwiftFlutterBarcodeScannerPlugin.onBarcodeScanReceiver(barcode: "-2")
+            })
         }else{
             if self.delegate != nil {
-            self.dismiss(animated: true, completion: {
-            self.showInputDialog(title: "Manual Entry",
-                subtitle: "Please enter the new number below.",
-                actionTitle: "OK",
-                cancelTitle: "Cancel",
-                inputPlaceholder: "Enter here",
-                inputKeyboardType: .default, actionHandler:
-                { (input:String?) in
-                    self.delegate?.userDidScanWith(barcode: input ?? "")
+                self.dismiss(animated: true, completion: {
+                    self.delegate?.userDidScanWith(barcode: "-2")
                 })
-             })
             }
         }
     }
