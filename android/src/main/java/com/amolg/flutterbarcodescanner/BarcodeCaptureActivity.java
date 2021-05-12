@@ -403,11 +403,11 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                 Log.e("BarcodeCaptureActivity", "FlashOnFailure: " + e.getLocalizedMessage());
             }
         } else if (i == R.id.btnBarcodeCaptureCancel) {
-//             Barcode barcode = new Barcode();
-//             barcode.rawValue = "-1";
-//             barcode.displayValue = "-1";
-//             FlutterBarcodeScannerPlugin.onBarcodeScanReceiver(barcode);
-//             finish();
+            Barcode barcode = new Barcode();
+            barcode.rawValue = "-2";
+            barcode.displayValue = "-2";
+            FlutterBarcodeScannerPlugin.onBarcodeScanReceiver(barcode);
+            finish();
         }
         else if (i == R.id.btnFinishedScanning) {
             Barcode barcode = new Barcode();
