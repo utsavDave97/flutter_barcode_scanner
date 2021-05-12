@@ -162,7 +162,7 @@ public class FlutterBarcodeScannerPlugin implements MethodCallHandler, ActivityR
                 } 
                 else 
                 {
-                    pendingResult.success("-1");
+                    pendingResult.success("-2");
                 }
                 pendingResult = null;
                 arguments = null;
