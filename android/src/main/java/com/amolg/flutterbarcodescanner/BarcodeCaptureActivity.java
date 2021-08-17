@@ -55,6 +55,9 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
 
 import java.io.IOException;
 
@@ -202,26 +205,28 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         // is set to receive the barcode detection results, track the barcodes, and maintain
         // graphics for each barcode on screen.  The factory is used by the multi-processor to
         // create a separate tracker instance for each barcode.
-        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.CODE_128).build();
-        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay, this);
-        barcodeDetector.setProcessor(
-                new MultiProcessor.Builder<>(barcodeFactory).build());
+        BarcodeScannerOptions options = new BarcodeScannerOptions.Builder().setBarcodeFormats(com.google.mlkit.vision.barcode.Barcode.FORMAT_CODE_128).build();
+        BarcodeScanner scanner = BarcodeScanning.getClient(options);
+        //BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.CODE_128).build();
+//        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay, this);
+//        barcodeDetector.setProcessor(
+//                new MultiProcessor.Builder<>(barcodeFactory).build());
 
-        if (!barcodeDetector.isOperational()) {
-            // Check for low storage.  If there is low storage, the native library will not be
-            // downloaded, so detection will not become operational.
-            IntentFilter lowstorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
-            boolean hasLowStorage = registerReceiver(null, lowstorageFilter) != null;
-
-            if (hasLowStorage) {
-                Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
-            }
-        }
+//        if (!scanner.isOperational()) {
+//            // Check for low storage.  If there is low storage, the native library will not be
+//            // downloaded, so detection will not become operational.
+//            IntentFilter lowstorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
+//            boolean hasLowStorage = registerReceiver(null, lowstorageFilter) != null;
+//
+//            if (hasLowStorage) {
+//                Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
+//            }
+//        }
 
         // Creates and starts the camera.  Note that this uses a higher resolution in comparison
         // to other detection examples to enable the barcode detector to detect small barcodes
         // at long distances.
-        CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), barcodeDetector)
+        CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), scanner)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedPreviewSize(1600, 1024)
                 .setRequestedFps(15.0f);

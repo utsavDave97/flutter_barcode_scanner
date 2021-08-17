@@ -37,6 +37,7 @@ import android.view.WindowManager;
 import com.google.android.gms.common.images.Size;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
 
 import java.io.IOException;
 import java.lang.Thread.State;
@@ -47,7 +48,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @SuppressWarnings("deprecation")
 public class CameraSource {
@@ -124,14 +124,14 @@ public class CameraSource {
      * Builder for configuring and creating an associated camera source.
      */
     public static class Builder {
-        private final Detector<?> mDetector;
+        private final BarcodeScanner mDetector;
         private CameraSource mCameraSource = new CameraSource();
 
         /**
          * Creates a camera source builder with the supplied context and detector.  Camera preview
          * images will be streamed to the associated detector upon starting the camera source.
          */
-        public Builder(Context context, Detector<?> detector) {
+        public Builder(Context context, BarcodeScanner detector) {
             if (context == null) {
                 throw new IllegalArgumentException("No context supplied.");
             }
@@ -946,7 +946,7 @@ public class CameraSource {
     }
 
     private class FrameProcessingRunnable implements Runnable {
-        private Detector<?> mDetector;
+        private BarcodeScanner mDetector;
         private long mStartTimeMillis = SystemClock.elapsedRealtime();
 
         // This lock guards all of the member variables below.
@@ -958,7 +958,7 @@ public class CameraSource {
         private int mPendingFrameId = 0;
         private ByteBuffer mPendingFrameData;
 
-        FrameProcessingRunnable(Detector<?> detector) {
+        FrameProcessingRunnable(BarcodeScanner detector) {
             mDetector = detector;
         }
 
@@ -966,7 +966,7 @@ public class CameraSource {
         void release() {
             assert (mProcessingThread == null || mProcessingThread.getState() == State.TERMINATED);
             if (mDetector != null) {
-                mDetector.release();
+                mDetector.close();
                 mDetector = null;
             }
         }
@@ -1030,6 +1030,7 @@ public class CameraSource {
 
 
                 try {
+                    mDetector.process(outputFrame);
                     mDetector.receiveFrame(outputFrame);
                 } catch (Throwable t) {
                 } finally {
