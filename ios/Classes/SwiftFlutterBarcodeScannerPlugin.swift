@@ -375,7 +375,7 @@ class BarcodeScannerViewController: UIViewController {
         self.view.addSubview(cancelButton)
         self.view.addSubview(finishedScanningButton)
         self.view.addSubview(flashIcon)
-        self.view.addSubview(switchCameraButton)
+//         self.view.addSubview(switchCameraButton)
         
         self.cancelButton.titleLabel?.adjustsFontSizeToFitWidth = false
         self.cancelButton.titleLabel?.lineBreakMode = .byWordWrapping
