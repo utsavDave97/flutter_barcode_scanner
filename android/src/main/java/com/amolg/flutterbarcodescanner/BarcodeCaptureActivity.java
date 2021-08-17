@@ -86,6 +86,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     private GestureDetector gestureDetector;
 
     private ImageView imgViewBarcodeCaptureUseFlash;
+    private ImageView imgViewSwitchCamera;
 
     public static int SCAN_MODE = SCAN_MODE_ENUM.QR.ordinal();
 
@@ -133,11 +134,11 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             boolean autoFocus = true;
             boolean useFlash = false;
 
-            // Check for the camera permission before accessing the camera.  If the
-            // permission is not granted yet, request permission.
-            int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        // Check for the camera permission before accessing the camera.  If the
+        // permission is not granted yet, request permission.
+        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
             if (rc == PackageManager.PERMISSION_GRANTED) {
-                createCameraSource(autoFocus, useFlash);
+                createCameraSource(autoFocus, useFlash, CameraSource.CAMERA_FACING_BACK);
             } else {
                 requestCameraPermission();
             }
@@ -198,19 +199,18 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
      * the constant.
      */
     @SuppressLint("InlinedApi")
-    private void createCameraSource(boolean autoFocus, boolean useFlash) {
+    private void createCameraSource(boolean autoFocus, boolean useFlash, int cameraFacing) {
         Context context = getApplicationContext();
 
         // A barcode detector is created to track barcodes.  An associated multi-processor instance
         // is set to receive the barcode detection results, track the barcodes, and maintain
         // graphics for each barcode on screen.  The factory is used by the multi-processor to
         // create a separate tracker instance for each barcode.
-        BarcodeScannerOptions options = new BarcodeScannerOptions.Builder().setBarcodeFormats(com.google.mlkit.vision.barcode.Barcode.FORMAT_CODE_128).build();
-        BarcodeScanner scanner = BarcodeScanning.getClient(options);
-        //BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.CODE_128).build();
-//        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay, this);
-//        barcodeDetector.setProcessor(
-//                new MultiProcessor.Builder<>(barcodeFactory).build());
+
+        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.CODE_128).build();
+        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay, this);
+        barcodeDetector.setProcessor(
+                new MultiProcessor.Builder<>(barcodeFactory).build());
 
 //        if (!scanner.isOperational()) {
 //            // Check for low storage.  If there is low storage, the native library will not be
@@ -226,10 +226,11 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         // Creates and starts the camera.  Note that this uses a higher resolution in comparison
         // to other detection examples to enable the barcode detector to detect small barcodes
         // at long distances.
-        CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), scanner)
-                .setFacing(CameraSource.CAMERA_FACING_BACK)
+        CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), barcodeDetector)
+                .setFacing(cameraFacing)
                 .setRequestedPreviewSize(1600, 1024)
-                .setRequestedFps(15.0f);
+                .setRequestedFps(30.0f)
+                .setFlashMode(useFlash ? Camera.Parameters.FLASH_MODE_TORCH : null);
 
         // make sure that auto focus is an available option
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -237,9 +238,12 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                     autoFocus ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null);
         }
 
-        mCameraSource = builder
-                .setFlashMode(useFlash ? Camera.Parameters.FLASH_MODE_TORCH : null)
-                .build();
+        // Stop & release current camera source before creating a new one.
+        if (mCameraSource != null) {
+            mCameraSource.stop();
+            mCameraSource.release();
+        }
+        mCameraSource = builder.build();
     }
 
     /**
@@ -303,7 +307,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             // we have permission, so create the camerasource
             boolean autoFocus = true;
             boolean useFlash = false;
-            createCameraSource(autoFocus, useFlash);
+            createCameraSource(autoFocus, useFlash, CameraSource.CAMERA_FACING_BACK);
             return;
         }
 
@@ -425,6 +429,19 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             FlutterBarcodeScannerPlugin.onBarcodeScanReceiver(barcode);
             finish();
         }
+    }
+
+    private int getInverseCameraFacing(int cameraFacing) {
+        if (cameraFacing == CameraSource.CAMERA_FACING_FRONT) {
+            return CameraSource.CAMERA_FACING_BACK;
+        }
+
+        if (cameraFacing == CameraSource.CAMERA_FACING_BACK) {
+            return CameraSource.CAMERA_FACING_FRONT;
+        }
+
+        // Fallback to camera at the back.
+        return CameraSource.CAMERA_FACING_BACK;
     }
 
     /**

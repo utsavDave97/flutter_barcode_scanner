@@ -9,6 +9,7 @@
 
     <com.amolg.flutterbarcodescanner.camera.CameraSourcePreview
         android:id="@+id/preview"
+        android:layout_above="@+id/layoutBottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,6 +22,7 @@
     </com.amolg.flutterbarcodescanner.camera.CameraSourcePreview>
 
     <RelativeLayout
+        android:id="@+id/layoutBottom"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
