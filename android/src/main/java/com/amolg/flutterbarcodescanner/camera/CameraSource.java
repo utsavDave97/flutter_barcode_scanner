@@ -125,7 +125,7 @@ public class CameraSource {
      * Builder for configuring and creating an associated camera source.
      */
     public static class Builder {
-        private final BarcodeScanner mDetector;
+        private final Detector<?> mDetector;
         private CameraSource mCameraSource = new CameraSource();
 
         /**
@@ -1030,7 +1030,7 @@ public class CameraSource {
 
 
                 try {
-                    mDetector.process(outputFrame);
+//                    mDetector.process(outputFrame);
                     mDetector.receiveFrame(outputFrame);
                 } catch (Throwable t) {
                 } finally {
