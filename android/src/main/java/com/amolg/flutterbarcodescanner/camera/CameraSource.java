@@ -38,7 +38,6 @@ import com.google.android.gms.common.images.Size;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.mlkit.vision.barcode.BarcodeScanner;
 
 import java.io.IOException;
 import java.lang.Thread.State;
@@ -946,7 +945,7 @@ public class CameraSource {
     }
 
     private class FrameProcessingRunnable implements Runnable {
-        private BarcodeScanner mDetector;
+        private Detector<?> mDetector;
         private long mStartTimeMillis = SystemClock.elapsedRealtime();
 
         // This lock guards all of the member variables below.
@@ -958,7 +957,7 @@ public class CameraSource {
         private int mPendingFrameId = 0;
         private ByteBuffer mPendingFrameData;
 
-        FrameProcessingRunnable(BarcodeScanner detector) {
+        FrameProcessingRunnable(Detector<?> detector) {
             mDetector = detector;
         }
 
@@ -966,7 +965,7 @@ public class CameraSource {
         void release() {
             assert (mProcessingThread == null || mProcessingThread.getState() == State.TERMINATED);
             if (mDetector != null) {
-                mDetector.close();
+                mDetector.release();
                 mDetector = null;
             }
         }
