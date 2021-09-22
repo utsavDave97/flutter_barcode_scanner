@@ -122,6 +122,14 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             imgViewBarcodeCaptureUseFlash = findViewById(R.id.imgViewBarcodeCaptureUseFlash);
             Button btnBarcodeCaptureCancel = findViewById(R.id.btnBarcodeCaptureCancel);
             Button btnFinishedScanning = findViewById(R.id.btnFinishedScanning);
+
+            if(FlutterBarcodeScannerPlugin.isFrench){
+                btnFinishedScanning.setText("Finish");
+            }
+            else {
+                btnFinishedScanning.setText("Finished Scanning");
+            }
+
             btnBarcodeCaptureCancel.setText(buttonText);
             btnBarcodeCaptureCancel.setOnClickListener(this);
             btnFinishedScanning.setOnClickListener(this);

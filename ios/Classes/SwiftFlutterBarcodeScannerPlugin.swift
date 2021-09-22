@@ -18,6 +18,7 @@ public class SwiftFlutterBarcodeScannerPlugin: NSObject, FlutterPlugin, ScanBarc
     public static var lineColor:String=""
     public static var cancelButtonText:String=""
     public static var isShowFlashIcon:Bool=false
+    public static var isFrench:Bool=false
     var pendingResult:FlutterResult!
     public static var isContinuousScan:Bool=false
     static var barcodeStream:FlutterEventSink?=nil
@@ -86,6 +87,12 @@ public class SwiftFlutterBarcodeScannerPlugin: NSObject, FlutterPlugin, ScanBarc
             }
         }else{
             SwiftFlutterBarcodeScannerPlugin.scanMode = ScanMode.QR.index
+        }
+
+        if let isFrench = args["isFrench"] as? Bool{
+            SwiftFlutterBarcodeScannerPlugin.isFrench = isFrench
+        }else {
+            SwiftFlutterBarcodeScannerPlugin.isFrench = false
         }
         
         pendingResult=result
@@ -227,7 +234,12 @@ class BarcodeScannerViewController: UIViewController {
     /// Create and return cancel button
     public lazy var finishedScanningButton: UIButton! = {
         let view = UIButton()
-        view.setTitle("Finished Scanning", for: .normal)
+        if(SwiftFlutterBarcodeScannerPlugin.isFrench){
+            view.setTitle("Finished Scanning", for: .normal)
+        }
+        else {
+            view.setTitle("Finished Scanning", for: .normal)
+        }
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(hexString: "#034FA3")
         view.addTarget(self, action: #selector(BarcodeScannerViewController.finishedScanningClicked), for: .touchUpInside)
