@@ -124,7 +124,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             Button btnFinishedScanning = findViewById(R.id.btnFinishedScanning);
 
             if(FlutterBarcodeScannerPlugin.isFrench){
-                btnFinishedScanning.setText("Finish");
+                btnFinishedScanning.setText("Sortir");
             }
             else {
                 btnFinishedScanning.setText("Finished Scanning");

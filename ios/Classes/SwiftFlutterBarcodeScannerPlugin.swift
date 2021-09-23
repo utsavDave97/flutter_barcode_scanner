@@ -235,7 +235,7 @@ class BarcodeScannerViewController: UIViewController {
     public lazy var finishedScanningButton: UIButton! = {
         let view = UIButton()
         if(SwiftFlutterBarcodeScannerPlugin.isFrench){
-            view.setTitle("Finished Scanning", for: .normal)
+            view.setTitle("Sortir", for: .normal)
         }
         else {
             view.setTitle("Finished Scanning", for: .normal)
