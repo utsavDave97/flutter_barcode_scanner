@@ -32,7 +32,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
-
+import com.amolg.flutterbarcodescanner.utils.CentralDetector;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -220,6 +220,24 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         barcodeDetector.setProcessor(
                 new MultiProcessor.Builder<>(barcodeFactory).build());
 
+        // Create Central-Focusing based on BARCODE/QR Frame on screen
+        int frameWidth;
+        int frameHeight;
+        if (SCAN_MODE == SCAN_MODE_ENUM.BARCODE.ordinal()) {
+            frameWidth = AppUtil.dpToPx(context, AppConstants.BARCODE_RECT_WIDTH);
+            frameHeight = AppUtil.dpToPx(context, (int) (AppConstants.BARCODE_RECT_HEIGHT / 1.5));
+        } else if (SCAN_MODE == SCAN_MODE_ENUM.QR.ordinal()) {
+            frameWidth = AppUtil.dpToPx(context, AppConstants.BARCODE_RECT_WIDTH);
+            frameHeight = AppUtil.dpToPx(context, AppConstants.BARCODE_RECT_HEIGHT);
+        } else {
+            frameWidth = 0;
+            frameHeight = 0;
+        }
+        CentralDetector centralDetector = new CentralDetector(barcodeDetector, frameWidth, frameHeight);
+
+        centralDetector.setProcessor(
+                new MultiProcessor.Builder<>(barcodeFactory).build());
+
 //        if (!scanner.isOperational()) {
 //            // Check for low storage.  If there is low storage, the native library will not be
 //            // downloaded, so detection will not become operational.
@@ -234,7 +252,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         // Creates and starts the camera.  Note that this uses a higher resolution in comparison
         // to other detection examples to enable the barcode detector to detect small barcodes
         // at long distances.
-        CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), barcodeDetector)
+        CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), centralDetector)
                 .setFacing(cameraFacing)
                 .setRequestedPreviewSize(1600, 1024)
                 .setRequestedFps(30.0f)
