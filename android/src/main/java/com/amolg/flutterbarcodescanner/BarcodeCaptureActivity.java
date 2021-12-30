@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.amolg.flutterbarcodescanner.utils.CentralDetector;
+import com.amolg.flutterbarcodescanner.constants.AppConstants;
 import com.amolg.flutterbarcodescanner.utils.AppUtil;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
