@@ -219,8 +219,8 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.CODE_128).build();
         BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay, this);
-        barcodeDetector.setProcessor(
-                new MultiProcessor.Builder<>(barcodeFactory).build());
+//        barcodeDetector.setProcessor(
+//                new MultiProcessor.Builder<>(barcodeFactory).build());
 
         // Create Central-Focusing based on BARCODE/QR Frame on screen
         int frameWidth;
