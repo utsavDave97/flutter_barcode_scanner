@@ -13,7 +13,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 
 import java.io.ByteArrayOutputStream;
 
-public class CentralDetector extends Detector<Barcode> {
+public final class CentralDetector extends Detector<Barcode> {
     private Detector<Barcode> mDelegate;
     private int mBoxWidth, mBoxHeight;
 
