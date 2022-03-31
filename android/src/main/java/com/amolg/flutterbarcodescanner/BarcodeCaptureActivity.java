@@ -219,8 +219,8 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).setBarcodeFormats(Barcode.CODE_128).build();
         BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay, this);
-//        barcodeDetector.setProcessor(
-//                new MultiProcessor.Builder<>(barcodeFactory).build());
+       barcodeDetector.setProcessor(
+               new MultiProcessor.Builder<>(barcodeFactory).build());
 
         // Create Central-Focusing based on BARCODE/QR Frame on screen
         int frameWidth;
@@ -235,10 +235,10 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             frameWidth = 0;
             frameHeight = 0;
         }
-        CentralDetector centralDetector = new CentralDetector(barcodeDetector, frameWidth, frameHeight);
+//         CentralDetector centralDetector = new CentralDetector(barcodeDetector, frameWidth, frameHeight);
 
-        centralDetector.setProcessor(
-                new MultiProcessor.Builder<>(barcodeFactory).build());
+//         centralDetector.setProcessor(
+//                 new MultiProcessor.Builder<>(barcodeFactory).build());
 
 //        if (!scanner.isOperational()) {
 //            // Check for low storage.  If there is low storage, the native library will not be
@@ -254,7 +254,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         // Creates and starts the camera.  Note that this uses a higher resolution in comparison
         // to other detection examples to enable the barcode detector to detect small barcodes
         // at long distances.
-        CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), centralDetector)
+        CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), barcodeDetector)
                 .setFacing(cameraFacing)
                 .setRequestedPreviewSize(1600, 1024)
                 .setRequestedFps(30.0f)
